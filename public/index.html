@@ -16,12 +16,11 @@
             --section-bg: #fff;
             --card-bg: #f6f9fc;
             --hover-bg: #e6f7f3;
+            --base-apy-color: #19c4a6;        /* Blend Green */
+            --lp-incentive-color: #ffba49;    /* Amber/Gold */
+            --rev-share-color: #5646ff;       /* Deep Blue */
         }
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: linear-gradient(135deg, var(--gray-bg) 0%, var(--gray-bg-alt) 100%);
@@ -145,9 +144,7 @@
             align-items: center;
             gap: 10px;
         }
-        .strategy-icon {
-            font-size: 1.5em;
-        }
+        .strategy-icon { font-size: 1.5em; }
         .allocation-split {
             display: flex;
             margin: 15px 0;
@@ -207,6 +204,21 @@
             overflow-x: auto;
             margin: 20px 0;
         }
+        .table-tooltip {
+            text-align: left;
+            font-size: 1.05em;
+            color: var(--blend-green-dark);
+            margin-bottom: 8px;
+            margin-top: -6px;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            font-weight: 500;
+        }
+        .table-tooltip .icon {
+            font-size: 1.18em;
+            margin-right: 3px;
+        }
         table {
             width: 100%;
             border-collapse: collapse;
@@ -227,10 +239,19 @@
             padding: 15px;
             border-bottom: 1px solid #e2e8f0;
             transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        tr {
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        tr.selected td, tr:active td {
+            background: linear-gradient(90deg, #e8fffc 60%, #c5ffe9 100%);
+            font-weight: bold;
         }
         tr:hover td {
-            background: #e8fffc;
-            transform: scale(1.02);
+            background: linear-gradient(90deg, #d6faf2 60%, #caf7ec 100%);
+            transform: scale(1.01);
             font-weight: 500;
         }
         tr:last-child td { border-bottom: none; }
@@ -238,52 +259,6 @@
             font-weight: bold;
             color: var(--blend-green);
             font-size: 1.1em;
-        }
-        .slider-container {
-            margin: 30px 0;
-            padding: 20px;
-            background: #f6fdfa;
-            border-radius: 12px;
-        }
-        .slider-label {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 10px;
-            font-weight: 500;
-        }
-        .slider {
-            width: 100%;
-            height: 8px;
-            -webkit-appearance: none;
-            appearance: none;
-            background: #d9f7f2;
-            border-radius: 5px;
-            outline: none;
-            transition: 0.2s;
-        }
-        .slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 24px;
-            height: 24px;
-            background: var(--blend-green);
-            border-radius: 50%;
-            cursor: pointer;
-            box-shadow: 0 2px 10px rgba(25,196,166,0.19);
-            transition: all 0.3s ease;
-        }
-        .slider::-webkit-slider-thumb:hover {
-            background: var(--blend-green-dark);
-            transform: scale(1.2);
-        }
-        .slider::-moz-range-thumb {
-            width: 24px;
-            height: 24px;
-            background: var(--blend-green);
-            border-radius: 50%;
-            cursor: pointer;
-            box-shadow: 0 2px 10px rgba(25,196,166,0.19);
-            transition: all 0.3s ease;
         }
         .chart-container {
             position: relative;
@@ -311,7 +286,7 @@
 <body>
     <div class="header">
         <img src="Logo.png" alt="Blend Logo" />
-        
+        <h1>Blend Protocol</h1>
         <p>Advanced Yield Optimization Through Strategic Leverage</p>
     </div>
     <div class="container">
@@ -411,15 +386,9 @@
         <!-- Interactive Yield Calculator -->
         <div class="section">
             <h2>Yield Projections</h2>
-            <div class="slider-container">
-                <div class="slider-label">
-                    <span>Lending APY</span>
-                    <span id="lendingAPYValue">2.0%</span>
-                </div>
-                <input type="range" min="2" max="5" value="2" step="0.1" class="slider" id="lendingSlider" oninput="updateCalculations()">
-            </div>
+            <div class="table-tooltip"><span class="icon">👉</span> Click a row to update the dashboard with that Lending APY.</div>
             <div class="interactive-table">
-                <table>
+                <table id="yieldTable">
                     <thead>
                         <tr>
                             <th>Lending APY</th>
@@ -432,8 +401,8 @@
                             <th>Revenue Share**</th>
                         </tr>
                     </thead>
-                    <tbody id="yieldTable">
-                        <tr>
+                    <tbody>
+                        <tr data-lending="2.0" class="selected">
                             <td>2.0%</td>
                             <td>2.5%</td>
                             <td class="highlight-value">35.60%</td>
@@ -443,7 +412,7 @@
                             <td class="highlight-value">+2.5%</td>
                             <td>0.35%</td>
                         </tr>
-                        <tr>
+                        <tr data-lending="3.0">
                             <td>3.0%</td>
                             <td>3.5%</td>
                             <td class="highlight-value">28.10%</td>
@@ -453,7 +422,7 @@
                             <td class="highlight-value">+2.0%</td>
                             <td>0.30%</td>
                         </tr>
-                        <tr>
+                        <tr data-lending="4.0">
                             <td>4.0%</td>
                             <td>4.5%</td>
                             <td class="highlight-value">20.60%</td>
@@ -463,7 +432,7 @@
                             <td class="highlight-value">+1.5%</td>
                             <td>0.25%</td>
                         </tr>
-                        <tr>
+                        <tr data-lending="5.0">
                             <td>5.0%</td>
                             <td>5.5%</td>
                             <td class="highlight-value">13.10%</td>
@@ -513,7 +482,7 @@
         </div>
     </div>
     <script>
-        // Chart setup
+        // Chart.js setup with distinct colors
         const ctx = document.getElementById('yieldChart').getContext('2d');
         let yieldChart = new Chart(ctx, {
             type: 'bar',
@@ -522,22 +491,22 @@
                 datasets: [{
                     label: 'Base APY',
                     data: [4.73, 11.59, 18.45],
-                    backgroundColor: 'rgba(25,196,166,0.8)',
+                    backgroundColor: 'rgba(25,196,166,0.85)', // green
                     borderColor: 'rgba(25,196,166,1)',
                     borderWidth: 2
                 },
                 {
                     label: 'LP Incentives',
                     data: [2.5, 2.5, 2.5],
-                    backgroundColor: 'rgba(121,205,176,0.85)',
-                    borderColor: 'rgba(121,205,176,1)',
+                    backgroundColor: 'rgba(255,186,73,0.88)', // amber
+                    borderColor: 'rgba(255,186,73,1)',
                     borderWidth: 2
                 },
                 {
                     label: 'Revenue Share',
                     data: [0.35, 0.35, 0.35],
-                    backgroundColor: 'rgba(201,247,242,0.85)',
-                    borderColor: 'rgba(201,247,242,1)',
+                    backgroundColor: 'rgba(86,70,255,0.87)', // deep blue
+                    borderColor: 'rgba(86,70,255,1)',
                     borderWidth: 2
                 }]
             },
@@ -556,8 +525,8 @@
                             },
                             afterLabel: function(context) {
                                 if (context.datasetIndex === 2) {
-                                    const total = context.parsed.y + 
-                                                yieldChart.data.datasets[0].data[context.dataIndex] + 
+                                    const total = context.parsed.y +
+                                                yieldChart.data.datasets[0].data[context.dataIndex] +
                                                 yieldChart.data.datasets[1].data[context.dataIndex];
                                     return 'Total: ' + total.toFixed(2) + '%';
                                 }
@@ -578,6 +547,88 @@
                 }
             }
         });
+
+        // Mapping from Lending APY to table row yields (keep in sync with table!)
+        const rowData = {
+            "2.0": {
+                lendingAPY: 2.00, borrowingAPR: 2.5, leveragedYield: 35.60,
+                conservativeYield: 4.73, balancedYield: 11.59, aggressiveYield: 18.45,
+                lpIncentive: 2.5, revShare: 0.35
+            },
+            "3.0": {
+                lendingAPY: 3.00, borrowingAPR: 3.5, leveragedYield: 28.10,
+                conservativeYield: 5.56, balancedYield: 10.18, aggressiveYield: 14.80,
+                lpIncentive: 2.0, revShare: 0.30
+            },
+            "4.0": {
+                lendingAPY: 4.00, borrowingAPR: 4.5, leveragedYield: 20.60,
+                conservativeYield: 6.40, balancedYield: 8.76, aggressiveYield: 11.14,
+                lpIncentive: 1.5, revShare: 0.25
+            },
+            "5.0": {
+                lendingAPY: 5.00, borrowingAPR: 5.5, leveragedYield: 13.10,
+                conservativeYield: 7.23, balancedYield: 7.35, aggressiveYield: 7.49,
+                lpIncentive: 1.0, revShare: 0.20
+            }
+        };
+
+        // On table row click: update dashboard
+        document.querySelectorAll('#yieldTable tbody tr').forEach(row => {
+            row.addEventListener('click', function() {
+                // Remove selected from all
+                document.querySelectorAll('#yieldTable tbody tr').forEach(r => r.classList.remove('selected'));
+                this.classList.add('selected');
+
+                // Get lendingAPY from data attribute
+                const lendingAPY = this.getAttribute('data-lending');
+                const data = rowData[lendingAPY];
+
+                // Update top boxes
+                document.getElementById('lenderAPY').textContent = data.lendingAPY.toFixed(2) + '%';
+                document.getElementById('netYield').textContent = data.leveragedYield.toFixed(2) + '%';
+
+                // Update strategy cards
+                document.getElementById('conservativeAPY').textContent = data.conservativeYield.toFixed(2) + '%';
+                document.getElementById('balancedAPY').textContent = data.balancedYield.toFixed(2) + '%';
+                document.getElementById('aggressiveAPY').textContent = data.aggressiveYield.toFixed(2) + '%';
+
+                // Update chart
+                yieldChart.data.datasets[0].data = [
+                    data.conservativeYield,
+                    data.balancedYield,
+                    data.aggressiveYield
+                ];
+                yieldChart.data.datasets[1].data = [
+                    data.lpIncentive,
+                    data.lpIncentive,
+                    data.lpIncentive
+                ];
+                yieldChart.data.datasets[2].data = [
+                    data.revShare,
+                    data.revShare,
+                    data.revShare
+                ];
+                yieldChart.update();
+            });
+        });
+
+        // Initialize to first row
+        // (Already selected via class, but JS will not run the code so do it manually)
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelector('#yieldTable tbody tr.selected').click();
+        });
+
+        // Allow table row selection with keyboard
+        document.querySelectorAll('#yieldTable tbody tr').forEach((row, idx, rows) => {
+            row.setAttribute('tabindex', 0);
+            row.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' || e.key === ' ') this.click();
+                if (e.key === 'ArrowDown' && idx < rows.length - 1) rows[idx+1].focus();
+                if (e.key === 'ArrowUp' && idx > 0) rows[idx-1].focus();
+            });
+        });
+
+        // Strategy card selection logic (unchanged)
         let selectedStrategy = 'conservative';
         function selectStrategy(strategy) {
             selectedStrategy = strategy;
@@ -585,55 +636,7 @@
                 card.classList.remove('active');
             });
             document.getElementById(strategy + 'Card').classList.add('active');
-            updateCalculations();
         }
-        function updateCalculations() {
-            const lendingAPY = parseFloat(document.getElementById('lendingSlider').value);
-            const borrowingAPR = lendingAPY + 0.5;
-            const leveragedYield = 7.5 * (7.247 - borrowingAPR);
-            document.getElementById('lendingAPYValue').textContent = lendingAPY.toFixed(1) + '%';
-            document.getElementById('lenderAPY').textContent = lendingAPY.toFixed(2) + '%';
-            document.getElementById('netYield').textContent = leveragedYield.toFixed(2) + '%';
-            const perfFee = 0.35;
-            const conservativeYield = 0.9 * lendingAPY * (1 - perfFee) + 0.1 * leveragedYield;
-            const balancedYield = 0.7 * lendingAPY * (1 - perfFee) + 0.3 * leveragedYield;
-            const aggressiveYield = 0.5 * lendingAPY * (1 - perfFee) + 0.5 * leveragedYield;
-            document.getElementById('conservativeAPY').textContent = conservativeYield.toFixed(2) + '%';
-            document.getElementById('balancedAPY').textContent = balancedYield.toFixed(2) + '%';
-            document.getElementById('aggressiveAPY').textContent = aggressiveYield.toFixed(2) + '%';
-            yieldChart.data.datasets[0].data = [
-                conservativeYield,
-                balancedYield,
-                aggressiveYield
-            ];
-            const lpIncentive = 3.5 - (lendingAPY - 2) * 0.5; // Higher incentives at lower rates
-            yieldChart.data.datasets[1].data = [lpIncentive, lpIncentive, lpIncentive];
-            const revShare = 0.45 - (lendingAPY - 2) * 0.05;
-            yieldChart.data.datasets[2].data = [revShare, revShare, revShare];
-            yieldChart.update();
-            // Highlight current row in table
-            const rows = document.querySelectorAll('#yieldTable tr');
-            rows.forEach(row => {
-                const rowAPY = parseFloat(row.cells[0].textContent);
-                if (Math.abs(rowAPY - lendingAPY) < 0.05) {
-                    row.style.background = 'linear-gradient(to right, rgba(25,196,166,0.10), rgba(121,205,176,0.10))';
-                    row.style.fontWeight = 'bold';
-                } else {
-                    row.style.background = '';
-                    row.style.fontWeight = '';
-                }
-            });
-        }
-        // Add hover effects to table rows
-        document.querySelectorAll('#yieldTable tr').forEach(row => {
-            row.addEventListener('mouseenter', function() {
-                const lendingAPY = parseFloat(this.cells[0].textContent);
-                document.getElementById('lendingSlider').value = lendingAPY;
-                updateCalculations();
-            });
-        });
-        // Initialize
-        updateCalculations();
     </script>
 </body>
 </html>
