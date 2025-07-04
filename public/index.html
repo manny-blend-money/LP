@@ -6,30 +6,6 @@
     <title>Blend Protocol - Yield Strategies Dashboard</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
     <style>
-        @media (max-width: 700px) {
-    .interactive-table {
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-        border-radius: 10px;
-        box-shadow: 0 1px 8px rgba(25,196,166,0.05);
-        margin-bottom: 8px;
-    }
-    table {
-        min-width: 700px;
-        font-size: 0.93em;
-    }
-    th, td {
-        padding: 11px 7px;
-        white-space: nowrap;
-    }
-    .table-tooltip {
-        font-size: 0.99em;
-    }
-}
-@media (max-width: 420px) {
-    th, td { padding: 8px 4px; font-size: 0.89em; }
-}
-
         :root {
             --blend-green: #19c4a6;
             --blend-green-dark: #159d84;
@@ -305,6 +281,29 @@
             padding-top: 20px;
             border-top: 1px solid #e2e8f0;
         }
+                @media (max-width: 700px) {
+    .interactive-table {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        border-radius: 10px;
+        box-shadow: 0 1px 8px rgba(25,196,166,0.05);
+        margin-bottom: 8px;
+    }
+    table {
+        min-width: 700px;
+        font-size: 0.93em;
+    }
+    th, td {
+        padding: 11px 7px;
+        white-space: nowrap;
+    }
+    .table-tooltip {
+        font-size: 0.99em;
+    }
+}
+@media (max-width: 420px) {
+    th, td { padding: 8px 4px; font-size: 0.89em; }
+}
     </style>
 </head>
 <body>
